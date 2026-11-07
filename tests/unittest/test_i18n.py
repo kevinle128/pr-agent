@@ -240,3 +240,15 @@ def test_codecommit_persistent_header_is_translated(language):
     body = CodeCommitProvider._persistent_body_for_target(
         f"## Guía\n\n{marker}\n\nbody", True, "review", marker, {"source_commit": "abc123"})
     assert f"{marker}\n\n#### (Revisión actualizada hasta el commit abc123)\n" in body
+
+
+@pytest.mark.parametrize("gfm_supported", [True, False])
+def test_review_summary_renders_vietnamese_labels_and_score(language, gfm_supported):
+    language("vi-VN")
+    output = convert_to_markdown_v2(_review(score="85"), gfm_supported=gfm_supported)
+
+    for label in ("Công sức review ước tính", "Không có test liên quan",
+                  "Không phát hiện vấn đề bảo mật", "Điểm"):
+        assert label in output
+    for label in ("Estimated effort", "No relevant tests", "No security concerns", "Score"):
+        assert label not in output

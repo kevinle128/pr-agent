@@ -495,6 +495,8 @@ def convert_to_markdown_v2(output_data: dict,
                 if gfm_supported:
                     markdown_text += "</td></tr>\n"
         else:
+            if key.lower() == 'score':
+                key_nice = t('review.score')
             key_nice = html.escape(key_nice)
             if isinstance(value, (dict, list)):
                 value_str = yaml.safe_dump(value, default_flow_style=False, allow_unicode=True).strip()
